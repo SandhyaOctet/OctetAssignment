@@ -30,3 +30,30 @@ body {
 .container {
   width: 1156px;
 }
+
+
+.home-table .ant-select.ant-pagination-options-size-changer::before {
+  content: "Show";
+  color: #22222F;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: normal;
+  margin-right: 10px;
+}
+
+.home-table .ant-select.ant-pagination-options-size-changer::after {
+  content: "entries";
+  color: #22222F;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: normal;
+  margin-left: 10px;
+}
+
+.ant-pagination{
+  margin-top: -38px!important;
+}
+.ant-table-footer{
+background-color: #ffffff!important;
+width: fit-content;
+}

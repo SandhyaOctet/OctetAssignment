@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Input, Table, Segmented, Pagination } from 'antd';
-import Image from 'next/image';
+import { Button, Input, Table, Segmented, Pagination, Dropdown, Menu } from 'antd';
+import filter from '@/app/assets/images/filter.svg'
+import edit2 from '@/app/assets/images/edit-2.svg'
 
-import searchIcon from '@/app/assets/images/search.svg';
-import filterIcon from '@/app/assets/images/filter.svg';
-// import moreIcon from '@/app/assets/images/more.svg';
+import { EllipsisOutlined } from '@ant-design/icons';
+import Image from 'next/image';
+import EditModal from '@/app/components/EditTicket';
 
 interface DataType {
   key: React.Key;
@@ -16,6 +17,10 @@ interface DataType {
   priority: string;
   createdOn: string;
   department: string;
+  category: string;
+  closedon: string;
+  assignto: string;
+  reopenreason: string;
 }
 
 const columns = [
@@ -28,6 +33,8 @@ const columns = [
   {
     title: 'EMP Name & ID',
     key: 'empName',
+    sorter: (a: DataType, b: DataType) => a.ticketNo.localeCompare(b.ticketNo),
+
     render: (record: DataType) => (
       <div className="flex items-center gap-2">
         <Image
@@ -44,20 +51,25 @@ const columns = [
       </div>
     ),
   },
-  { title: 'Title', dataIndex: 'title', key: 'title' },
+  {
+    title: 'Title', dataIndex: 'title', key: 'title', sorter: (a: DataType, b: DataType) => a.ticketNo.localeCompare(b.ticketNo),
+  },
   {
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
     render: (status: string) => (
       <span
-        className={`px-2 py-1 rounded text-xs ${
-          status === 'Closed'
-            ? 'bg-red-100 text-red-600'
-            : status === 'Open'
-            ? 'bg-green-100 text-green-600'
-            : 'bg-yellow-100 text-yellow-600'
-        }`}
+        className={`px-2 py-1 rounded text-xs ${status === 'Closed'
+          ? 'bg-orange-200'
+          : status === 'Open'
+            ? 'bg-blue-100'
+            : status === 'Hold'
+            ? 'bg-green-100'
+            : status === 'Reopen'
+            ? 'bg-red-200'
+            : ''
+          }`}
       >
         {status}
       </span>
@@ -67,26 +79,58 @@ const columns = [
     title: 'Priority',
     dataIndex: 'priority',
     key: 'priority',
+    sorter: (a: DataType, b: DataType) => a.ticketNo.localeCompare(b.ticketNo),
     render: (priority: string) => (
       <div className="flex items-center gap-1">
-        {priority === 'Critical' && <span className="text-red-500">⬆</span>}
-        {priority === 'Medium' && <span className="text-yellow-500">⬅</span>}
+        {priority === 'Critical' && <span className="">⬆</span>}
+        {priority === 'Medium' && <span className="">⬅</span>}
         {priority}
       </div>
     ),
   },
-  { title: 'Created on', dataIndex: 'createdOn', key: 'createdOn' },
-  { title: 'Department', dataIndex: 'department', key: 'department' },
+  {
+    title: 'Created on', dataIndex: 'createdOn', key: 'createdOn', sorter: (a: DataType, b: DataType) => a.ticketNo.localeCompare(b.ticketNo),
+  },
+  {
+    title: 'Department', dataIndex: 'department', key: 'department', sorter: (a: DataType, b: DataType) => a.ticketNo.localeCompare(b.ticketNo),
+  },
+  {
+    title: 'Category', dataIndex: 'category', key: 'category', sorter: (a: DataType, b: DataType) => a.ticketNo.localeCompare(b.ticketNo),
+  },
+  {
+    title: 'Closed On', dataIndex: 'closedon', key: 'closedon', sorter: (a: DataType, b: DataType) => a.ticketNo.localeCompare(b.ticketNo),
+  },
+  {
+    title: 'Assigned To', dataIndex: 'assignto', key: 'assignto', sorter: (a: DataType, b: DataType) => a.ticketNo.localeCompare(b.ticketNo),
+  },
+  { title: 'Reopen Reason', dataIndex: 'reopenreason', key: 'reopenreason' },
   {
     title: 'Actions',
     key: 'actions',
-    render: () => (
-      <Button type="text" icon={<Image src={filterIcon} alt="More" />} />
-    ),
+    fixed: 'right',
+    render: () => {
+      const menu = (
+        <Menu
+
+          items={[
+            { label: 'Close', key: 'close' },
+            { label: 'Put On Hold', key: 'put_on_hold' },
+            { label: 'Re-Assign', key: 're_assign' },
+          ]}
+        />
+      );
+      return (
+        <Dropdown overlay={menu} trigger={['click']}>
+          <Button type="text" icon={<EllipsisOutlined />} />
+        </Dropdown>
+      );
+    },
   },
 ];
 
-const data: DataType[] = Array.from({ length: 50 }, (_, i) => ({
+
+
+const data: DataType[] = Array.from({ length: 22 }, (_, i) => ({
   key: i,
   ticketNo: `INC10${i + 1}`,
   empName: `Employee ${i + 1}`,
@@ -96,68 +140,92 @@ const data: DataType[] = Array.from({ length: 50 }, (_, i) => ({
   priority: i % 3 === 0 ? 'Critical' : 'Medium',
   createdOn: `01/01/2022`,
   department: `HR`,
+  category: `HR1 ${i}`,
+  closedon: `01/01/2022`,
+  assignto: `Lorem ipsum dolor sit amet consectetur. ${i}`,
+  reopenreason: `Lorem ipsum dolor sit amet consectetur. ${i}`,
 }));
 
 const MyInboxTickets: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("All (22)");
 
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 }); // State to track pagination
+
+  const onTableChange = (paginationInfo: any) => {
+    setPagination({
+      current: paginationInfo.current,
+      pageSize: paginationInfo.pageSize,
+    });
+  };
   return (
     <div className="flex">
       {/* Sidebar */}
-      <aside className="w-60 bg-gray-100 p-4 border-r">
+      <div className="w-[170px] bg-gray-100 p-4 border-r">
         <h3 className="text-lg font-bold mb-4">Tickets</h3>
         <ul className="space-y-2">
           <li className="text-blue-500 font-medium cursor-pointer">My Inbox Tickets</li>
           {/* Add other sidebar items here */}
         </ul>
-      </aside>
+      </div>
 
       {/* Main Content */}
-      <main className="flex-1 p-6 bg-white">
+      <div className="flex-1 p-6 bg-white overflow-scroll">
+
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold">My Inbox Tickets</h1>
-          <Button className="flex items-center gap-2 border-gray-300">
-            <Image src={filterIcon} alt="Filter" />
-            Filter
-          </Button>
         </div>
-
-        {/* Search and Tabs */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="relative w-1/2">
+        <div className='flex flex-row justify-between items-center'>
+          {/* Search and Tabs */}
+          <div className="flex items-center justify-between mb-4 flex-row gap-2">
             <Input
-              placeholder="Search Ticket..."
-              className="pl-10 rounded-lg border-gray-300"
-              prefix={<Image src={searchIcon} alt="Search" />}
+              placeholder="Search Tickets..."
+              prefix={<i className="anticon anticon-search"></i>}
+              className="rounded-lg"
+            />
+            <Button className='flex items-center justify-center gap-1 border-[#EAECF0] '>
+              <Image src={filter} alt='filter' />
+              Filter
+            </Button>
+          </div>
+          <div className='flex flex-row gap-2'>
+            <Button className='flex items-center justify-center gap-1 ' onClick={() => setShowModal(true)}>
+              <Image src={edit2} alt='edit' />
+              Edit
+            </Button>
+            <Segmented
+              options={['All ()', 'Open ()', 'Reopened ()', 'Closed ()', 'Hold ()']}
+              defaultValue="All ()"
+              className="rounded-md"
+              // value={selectedStatus}
+        // onChange={() => selectedStatus}
             />
           </div>
-          <Segmented
-            options={['All (12)', 'Open (2)', 'Reopened (0)', 'Closed (9)', 'Hold (5)']}
-            defaultValue="All (12)"
-            className="rounded-md"
-          />
         </div>
-
         {/* Table */}
         <Table
           columns={columns}
           dataSource={data}
-          pagination={false}
-          scroll={{ x: 'max-content' }}
-          className="mb-4"
+          className="home-table mb-4"
+          pagination={{
+            showSizeChanger: false,
+            defaultPageSize: 10,
+          }}
+          footer={() => {
+            const start = (pagination.current - 1) * pagination.pageSize + 1;
+            const end = Math.min(pagination.current * pagination.pageSize, data.length);
+            const visibleCount = end - start + 1; // Calculate the number of visible rows
+            return `Showing ${visibleCount} of ${data.length} entries`;
+          }}
+          onChange={onTableChange} 
+
         />
 
-        {/* Pagination */}
-        <Pagination
-          current={currentPage}
-          total={data.length}
-          pageSize={10}
-          onChange={(page) => setCurrentPage(page)}
-          className="text-center"
-        />
-      </main>
-    </div>
+      </div>
+      <EditModal showModal={showModal} setShowModal={setShowModal} />
+
+    </div >
   );
 };
 
