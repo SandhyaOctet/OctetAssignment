@@ -20,8 +20,12 @@ interface DataType {
   status: string,
   priority: string,
   Createdon: string,
-  age: number;
-  address: string;
+  department: string,
+  category: string,
+  closedon: any,
+  assignto:any,
+  reopenreason: any,
+  actions: any;
 }
 
 const columns: TableColumnsType<DataType> = [
@@ -37,19 +41,45 @@ const columns: TableColumnsType<DataType> = [
 
 const dataSource = Array.from<DataType>({ length: 46 }).map<DataType>((_, i) => ({
   key: i,
-  ticketnumber: 'INC100397',
+  ticketnumber: `INC100397 ${i}`,
   name: `Ankit Chahuan ${i}`,
-  title: "Lorem ipsum dolor sit amet consectetur.",
-  status: "Open || Closed || Reopen || Hold",
-  priority: "Low || Medium || High || Critical",
-Createdon: '01/01/2022',
-  age: 32,
-  address: `London, Park Lane no. ${i}`,
+  title: `Lorem ipsum dolor sit amet consectetur. ${i}`,
+  status: i % 2 === 0 ? 'Opened' : 'Closed',
+  priority: i % 3 === 0 ? 'High' : 'Low',
+  Createdon: `2023-11-${10 + i}`,
+  department: `HR ${i}`,
+  category: `HR1 ${i}`,
+  closedon: `button ${i}`,
+  assignto:`Lorem ipsum dolor sit amet consectetur. ${i}`,
+  reopenreason: `Lorem ipsum dolor sit amet consectetur. ${i}`,
+  actions: 'Edit/Delete',
 }));
 
 const TableTab: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [data, setData] = useState(dataSource);
+  const [searchValue, setSearchValue] = useState('');
+  const [filterStatus, setFilterStatus] = useState<string>('All');
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+    const filteredData = dataSource.filter(
+      (item) =>
+        item.ticketnumber.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.title.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setData(filteredData);
+  };
+
+  const handleTabChange = (value: string) => {
+    setFilterStatus(value);
+    if (value === 'All') {
+      setData(dataSource);
+    } else {
+      const filteredData = dataSource.filter((item) => item.status === value);
+      setData(filteredData);
+    }
+  };
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -86,29 +116,30 @@ const TableTab: React.FC = () => {
 
           </div>
           <div className='flex flex-row gap-2'>
-          <Button className='flex items-center justify-center gap-1 '>
-            <Image src={edit2} alt='edit' />
-            Edit
-          </Button>
+            <Button className='flex items-center justify-center gap-1 '>
+              <Image src={edit2} alt='edit' />
+              Edit
+            </Button>
             <Segmented
               value={alignValue}
               style={{ marginBottom: 8 }}
-              onChange={setAlignValue}
-              defaultActiveKey="All"
               options={['All', 'Opened', 'Reopen', 'Draft', 'Closed', 'Hold']}
+              onChange={handleTabChange}
+              defaultValue="All"
+
             />
 
           </div>
           {hasSelected ? `Selected ${selectedRowKeys.length} items` : null}
         </div>
         <div>
-          
+
           <Table<DataType>
             rowSelection={rowSelection}
             columns={columns}
             dataSource={dataSource}
-            scroll={{ x: '100%' }} // Ensures horizontal scrolling for the table if needed
-          />
+            pagination={{ pageSize: 10 }}
+            scroll={{ x: 'max-content' }}          />
         </div>
       </div>
     </div>

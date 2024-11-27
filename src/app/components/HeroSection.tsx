@@ -1,5 +1,6 @@
 import React from 'react'
 import TableTab from './Table'
+import MyInboxTickets from './Table2'
 
 const HeroSection = () => {
     return (
@@ -11,7 +12,8 @@ const HeroSection = () => {
                 </div>
             </div>
             <div className="w-full md:w-3/4">
-                <TableTab />
+                {/* <TableTab /> */}
+                <MyInboxTickets />
             </div>
         </div>
 
