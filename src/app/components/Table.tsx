@@ -25,7 +25,6 @@ interface DataType {
   closedon: any,
   assignto:any,
   reopenreason: any,
-  actions: any;
 }
 
 const columns: TableColumnsType<DataType> = [

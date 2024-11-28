@@ -75,6 +75,7 @@ const EditModal = ({ showModal, setShowModal }: { showModal?: any; setShowModal?
                                 labelRender={departmentLabelRender} 
                                 style={{ width: '100%', border: 'none' }} 
                                 options={departments} 
+                                defaultValue={`Developement`}
                             />
                         </div>
                     </div>
