@@ -29,7 +29,7 @@ const ReAssignModal = ({ assignModal, setAssignModal }: { assignModal?: any; set
             title='Re-Assign Ticket' 
             open={assignModal} 
             onCancel={() => setAssignModal(false)} 
-            onSave={() => setAssignModal(false)}
+            onOk={() => setAssignModal(false)}
             cancelButtonProps={{
                 className: 'bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded',
             }} 
