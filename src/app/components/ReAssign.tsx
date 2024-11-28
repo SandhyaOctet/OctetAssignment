@@ -9,8 +9,8 @@ type LabelRender = SelectProps['labelRender'];
 
 const categoryOptions = [
     { label: 'Najibullah Siddiqui', value: 'Najibullah Siddiqui' },
-    { label: 'Najibullah Siddiqui', value: 'Najibullah Siddiqui' },
-    { label: 'Najibullah Siddiqui', value: 'Najibullah Siddiqui' },
+    { label: 'Najibullah', value: 'Najibullah' },
+    { label: 'Siddiqui', value: 'Siddiqui' },
 ];
 
 const categoryLabelRender: LabelRender = (props) => {

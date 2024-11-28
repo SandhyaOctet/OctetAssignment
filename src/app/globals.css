@@ -2,11 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .container {
   width: 1156px;
 }
-
 
 .home-table .ant-select.ant-pagination-options-size-changer::before {
   content: "Show";
