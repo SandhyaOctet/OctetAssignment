@@ -1,3 +1,5 @@
+//@typescript-eslint/no-explicit-any
+
 import React, { useState } from "react";
 import { Dropdown } from "antd";
 import { DownOutlined } from "@ant-design/icons";

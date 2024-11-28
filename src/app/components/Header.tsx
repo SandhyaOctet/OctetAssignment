@@ -1,4 +1,6 @@
-import { Dropdown, Input, Badge } from "antd";
+//@typescript-eslint/no-explicit-any
+
+import { Dropdown, Input } from "antd";
 import Image from 'next/image';
 import icon1 from '@/app/assets/images/icon1.svg'
 import logo from '@/app/assets/images/logo.svg'
@@ -8,17 +10,10 @@ import Ellipse from '@/app/assets/images/Ellipse.svg'
 import settings from '@/app/assets/images/settings.svg'
 import octeticon from '@/app/assets/images/octeticon.svg'
 import { DownOutlined } from "@ant-design/icons";
-import { useState } from "react";
 import RoutineDropdown from "./RoutineDropdown";
 import { routineMenuData } from "../assets/data/routine";
 
 const Navbar = () => {
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-
-    const handleDropdownChange = (key: string, isOpen: boolean) => {
-        setOpenDropdown(isOpen ? key : null);
-    };
-
     const menuItems = [
         { key: "1", label: "Option 1" },
         { key: "2", label: "Option 2" },
@@ -42,8 +37,7 @@ const Navbar = () => {
                     >
                         <div className="cursor-pointer text-[#273142] text-[13px] font-medium">Quick Actions
                             <DownOutlined
-                                className={`ml-1 text-xs transition-transform duration-200 ${openDropdown === "quick-actions" ? "rotate-180" : "rotate-0"
-                                    }`}
+                                className={`ml-1 text-xs transition-transform duration-200 `}
                             /></div>
                     </Dropdown>
                 </div>

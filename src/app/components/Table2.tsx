@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client';
 import React, { useState } from "react";
 import {
@@ -261,10 +263,7 @@ const MyInboxTickets: React.FC = () => {
   };
 
   // Close the drawer
-  const closeDrawer = () => {
-    setDrawerVisible(false);
-    setSelectedTicket(null);
-  };
+
   // const handleRowClick = (ticket: React.SetStateAction<null>) => {
   //   setSelectedTicket(ticket);
   //   setDrawerVisible(true);
@@ -272,12 +271,7 @@ const MyInboxTickets: React.FC = () => {
 
 
   // Calculate count for each status
-  const getCountForStatus = (status: string) => {
-    if (status === 'all') {
-      return filteredData.length; // Count based on filtered data
-    }
-    return filteredData.filter((item) => item.status.toLowerCase() === status).length;
-  };
+
 
   const handleStatusChange = (value: string) => {
     setSelectedStatus(value);

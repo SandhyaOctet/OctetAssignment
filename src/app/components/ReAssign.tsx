@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client'
 
 import React from 'react'
-import { Button, Modal, Select, SelectProps } from "antd"
+import { Modal, Select, SelectProps } from "antd"
 
 type LabelRender = SelectProps['labelRender'];
 

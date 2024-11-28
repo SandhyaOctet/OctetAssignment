@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client'
 import Image from 'next/image'
 import chevronsup from '@/app/assets/images/chevrons-up.svg'
@@ -6,10 +8,8 @@ import equal from '@/app/assets/images/equal.svg'
 import chevrondown from '@/app/assets/images/chevron-down.svg'
 
 import React from 'react'
-import { Button, Modal, Select, SelectProps } from "antd"
+import { Button, Modal, Select } from "antd"
 
-type LabelRender = SelectProps['labelRender'];
-type LabelsRender = SelectProps['labelRender'];
 
 const departments = [
     { label: 'Finance', value: 'Finance' },
@@ -17,14 +17,7 @@ const departments = [
     { label: 'Developement', value: 'Developement' },
 ];
 
-const departmentLabelRender: LabelsRender = (props: { label: any; value: any }) => {
-    const { label, value } = props;
 
-    if (label) {
-        return value;
-    }
-    return <span>Select Departrment</span>;
-};
 const categoryOptions = [
     { label: 'HR', value: 'HR' },
     { label: 'Developer', value: 'Developer' },
@@ -32,15 +25,9 @@ const categoryOptions = [
     { label: 'Designer', value: 'Designer' },
 ];
 
-const categoryLabelRender: LabelRender = (props) => {
-    const { label, value } = props;
 
-    if (label) {
-        return value;
-    }
-    return <span>Select Category</span>;
-};
-const EditModal = ({ showModal, setShowModal }: { showModal?: any; setShowModal?: any }) => {
+const EditModal = ({ showModal, setShowModal }: { showModal?: boolean; setShowModal?: any }) => {//+
+
 
     return (
         <div className='max-w-[530px] !p-0'>
@@ -72,7 +59,6 @@ const EditModal = ({ showModal, setShowModal }: { showModal?: any; setShowModal?
                         <div>Department</div>
                         <div className='flex flex-row justify-between items-center gap-4 bg-white w-full'>
                             <Select 
-                                labelRender={departmentLabelRender} 
                                 style={{ width: '100%', border: 'none' }} 
                                 options={departments} 
                                 defaultValue={`Select Department`}
@@ -85,10 +71,9 @@ const EditModal = ({ showModal, setShowModal }: { showModal?: any; setShowModal?
                         <div>Category</div>
                         <div className='flex flex-row justify-between items-center gap-4 bg-white w-full border-none'>
                             <Select 
-                                labelRender={categoryLabelRender} 
                                 style={{ width: '100%', border: 'none' }} 
                                 options={categoryOptions} 
-                                defaultValue={`Select Category`}
+                                defaultValue={`HR`}
                             />
                         </div>
                     </div>

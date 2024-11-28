@@ -66,10 +66,10 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ visible, onClose, ticketDat
         <Table
           columns={[
             { title: 'Attachment Name', dataIndex: 'name',      
-              sorter: (a: any, b: any) => a.ticketNo.localeCompare(b.ticketNo),
+              // sorter: (a: string, b: string) => a.ticketNo.localeCompare(b.ticketNo),
             },
             { title: 'Attachment Details', dataIndex: 'details' },
-            { title: 'Action', render: (_: any, record: any) => <Button>Download</Button> },
+            { title: 'Action', render: () => <Button>Download</Button> },
           ]}
           dataSource={ticketData.attachments}
           pagination={false}
