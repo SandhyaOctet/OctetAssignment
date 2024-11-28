@@ -29,7 +29,7 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ visible, onClose, ticketDat
       onClose={onClose}
       visible={visible}
       width={500}
-      classname='py-3 px-5 flex flex-row-reverse justify-between'
+      className='py-3 px-5 flex flex-row-reverse justify-between'
     >
       <div className='flex flex-col gap-[40px]'>
         <div className='flex flex-col gap-2'>
@@ -73,7 +73,7 @@ const TicketDrawer: React.FC<TicketDrawerProps> = ({ visible, onClose, ticketDat
           ]}
           dataSource={ticketData.attachments}
           pagination={false}
-          classname='!bg-[#667085]'
+          className='!bg-[#667085]'
         />
       </div>
       </div>
